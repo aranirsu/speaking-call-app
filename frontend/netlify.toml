@@ -7,3 +7,10 @@
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+[build]
+  command = "npm ci --prefix frontend && npm run build --prefix frontend"
+  # IMPORTANT: do NOT set publish for Next.js
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
