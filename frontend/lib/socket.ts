@@ -11,7 +11,7 @@ const getSocketUrl = (): string => {
     return process.env.NEXT_PUBLIC_SOCKET_URL;
   }
   // For local development, backend runs on port 3001
-  return "http://localhost:3001";
+  return "http://localhost:5000";
 };
 
 export const getSocket = (): Socket => {
