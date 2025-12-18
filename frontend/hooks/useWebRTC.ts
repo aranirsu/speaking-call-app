@@ -94,23 +94,38 @@ export function useWebRTC({
     setRemoteStream(remoteStreamRef.current);
 
     pc.ontrack = (event) => {
-      console.log("🎵 Got remote track:", event.track.kind, "enabled:", event.track.enabled);
-      
-      if (remoteStreamRef.current) {
-        // Remove existing tracks of same kind
-        remoteStreamRef.current.getTracks().forEach(t => {
-          if (t.kind === event.track.kind) {
-            remoteStreamRef.current?.removeTrack(t);
-          }
-        });
-        
-        // Add new track
-        remoteStreamRef.current.addTrack(event.track);
-        console.log("✅ Added track to remote stream. Total tracks:", remoteStreamRef.current.getTracks().length);
-        
-        // Force React state update
-        setRemoteStream(new MediaStream(remoteStreamRef.current.getTracks()));
+      console.log("🎵 ontrack event:", event);
+
+      // If the remote peer provided a full stream, prefer that (more reliable on some browsers)
+      if (event.streams && event.streams.length > 0) {
+        console.log("🎵 Using event.streams[0] as remote stream");
+        remoteStreamRef.current = event.streams[0];
+        // Ensure tracks are enabled
+        remoteStreamRef.current.getAudioTracks().forEach(t => (t.enabled = true));
+        setRemoteStream(remoteStreamRef.current);
+        return;
       }
+
+      // Fallback: attach individual incoming track
+      console.log("🎵 Got remote track (fallback):", event.track.kind, "enabled:", event.track.enabled);
+      if (!remoteStreamRef.current) {
+        remoteStreamRef.current = new MediaStream();
+      }
+
+      // Remove any existing track of same kind
+      remoteStreamRef.current.getTracks().forEach(t => {
+        if (t.kind === event.track.kind) {
+          try { remoteStreamRef.current?.removeTrack(t); } catch (e) { /* ignore */ }
+        }
+      });
+
+      // Enable and add new track
+      try {
+        event.track.enabled = true;
+      } catch (e) {}
+      remoteStreamRef.current.addTrack(event.track);
+      console.log("✅ Added track to remote stream. Total tracks:", remoteStreamRef.current.getTracks().length);
+      setRemoteStream(new MediaStream(remoteStreamRef.current.getTracks()));
     };
 
     pc.onicecandidate = (event) => {
