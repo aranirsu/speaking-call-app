@@ -71,6 +71,7 @@ export function useWebRTC({
         video: false,
       });
       console.log("🎤 Got local audio stream");
+      console.log("Local tracks:", stream.getTracks().map(t => `${t.kind}:${t.enabled}:${t.readyState}`));
       localStreamRef.current = stream;
       setLocalStream(stream);
       return stream;
@@ -142,6 +143,10 @@ export function useWebRTC({
       console.log("📡 Connection state:", pc.connectionState);
       setIsConnected(pc.connectionState === "connected");
       onConnectionStateChange?.(pc.connectionState);
+      // Extra debug: log receivers and their tracks
+      try {
+        console.log("RTCPeerConnection receivers:", pc.getReceivers().map(r => ({ id: r.track?.id, kind: r.track?.kind, enabled: r.track?.enabled })));
+      } catch (e) {}
     };
 
     pc.oniceconnectionstatechange = () => {
@@ -164,6 +169,20 @@ export function useWebRTC({
       console.log("➕ Adding local track:", track.kind);
       pc.addTrack(track, stream);
     });
+
+    // Log senders for non-initiator as well
+    setTimeout(() => {
+      try {
+        console.log("(non-initiator) RTCPeerConnection senders:", pc.getSenders().map(s => ({ id: s.track?.id, kind: s.track?.kind, enabled: s.track?.enabled })));
+      } catch (e) {}
+    }, 500);
+
+    // Log senders after adding tracks
+    setTimeout(() => {
+      try {
+        console.log("RTCPeerConnection senders:", pc.getSenders().map(s => ({ id: s.track?.id, kind: s.track?.kind, enabled: s.track?.enabled })));
+      } catch (e) {}
+    }, 500);
 
     // Create and send offer
     console.log("📤 Creating offer...");
