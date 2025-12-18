@@ -22,6 +22,29 @@ body {
   overflow-x: hidden;
 }
 
+/* Mobile-friendly defaults */
+html, body {
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+  touch-action: manipulation;
+}
+
+/* Make media scale within containers on mobile */
+img, video, canvas, svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* App container padding for small screens */
+.app-container {
+  padding: 16px;
+}
+
+@media (min-width: 640px) {
+  .app-container { padding: 24px; }
+}
+
 /* Enhanced Glassmorphism */
 .glass {
   background: rgba(255, 255, 255, 0.06);
