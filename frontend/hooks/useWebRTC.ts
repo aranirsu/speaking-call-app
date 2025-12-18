@@ -43,6 +43,7 @@ export function useWebRTC({
   const [isMuted, setIsMuted] = useState(false);
 
   const peerConnectionRef = useRef<RTCPeerConnection | null>(null);
+  const statsIntervalRef = useRef<number | null>(null);
   const localStreamRef = useRef<MediaStream | null>(null);
   const remoteStreamRef = useRef<MediaStream | null>(null);
   const pendingCandidates = useRef<RTCIceCandidateInit[]>([]);
@@ -146,6 +147,30 @@ export function useWebRTC({
       // Extra debug: log receivers and their tracks
       try {
         console.log("RTCPeerConnection receivers:", pc.getReceivers().map(r => ({ id: r.track?.id, kind: r.track?.kind, enabled: r.track?.enabled })));
+      } catch (e) {}
+      // Start periodic getStats when connected to inspect ICE candidate pair
+      try {
+        if (pc.connectionState === "connected") {
+          if (statsIntervalRef.current == null) {
+            statsIntervalRef.current = window.setInterval(async () => {
+              try {
+                const stats = await pc.getStats();
+                stats.forEach((report) => {
+                  if ((report as any).type === 'candidate-pair' && (report as any).selected) {
+                    console.log('🔍 Selected candidate-pair:', report);
+                  }
+                });
+              } catch (e) {
+                /* ignore */
+              }
+            }, 2000) as unknown as number;
+          }
+        } else {
+          if (statsIntervalRef.current != null) {
+            clearInterval(statsIntervalRef.current);
+            statsIntervalRef.current = null;
+          }
+        }
       } catch (e) {}
     };
 
