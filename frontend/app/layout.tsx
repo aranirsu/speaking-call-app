@@ -1,12 +1,21 @@
 import "./globals.css";
 import { CallProvider } from "@/context/CallContext";
+import { Inter } from "next/font/google";
+
+const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
   title: "SpeakFlow - Practice Speaking with Real People",
   description: "Connect with language partners worldwide for real-time speaking practice",
   icons: {
-    icon: "🎙️",
+    icon: "/favicon.ico",
   },
+};
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  themeColor: "#FAFAFA",
 };
 
 export default function RootLayout({
@@ -15,16 +24,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <head>
-        <link
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-          rel="stylesheet"
-        />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#0a0a0f" />
-      </head>
-      <body className="min-h-screen bg-[#0f0f23] text-white antialiased">
+    <html lang="en" className="bg-background">
+      <body className={`${inter.className} min-h-screen bg-background text-foreground antialiased`}>
         <CallProvider>{children}</CallProvider>
       </body>
     </html>
