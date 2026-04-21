@@ -35,3 +35,8 @@ Thumbs.db
 .vercel
 .netlify
 
+# Legacy backend folder (separate deployment)
+backend/
+frontend/
+socket-server/
+
