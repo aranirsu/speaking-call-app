@@ -3,18 +3,31 @@ node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+.pnpm/
 
 # Next.js
 .next/
 out/
+build/
+dist/
 
 # Environment variables
 .env
 .env.local
+.env.*.local
 
 # OS
 .DS_Store
 Thumbs.db
 
-# Local Netlify folder
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*.iml
+
+# Deployment
+.vercel
 .netlify
