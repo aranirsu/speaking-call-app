@@ -5,9 +5,6 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 .pnpm/
-pnpm-lock.yaml
-package-lock.json
-yarn.lock
 
 # Next.js
 .next/
@@ -34,9 +31,3 @@ Thumbs.db
 # Deployment
 .vercel
 .netlify
-
-# Legacy backend folder (separate deployment)
-backend/
-frontend/
-socket-server/
-
