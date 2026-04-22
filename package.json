@@ -1,11 +1,11 @@
 {
-  "name": "speakflow-root",
-  "version": "2.0.0",
+  "name": "speakflow",
+  "version": "3.0.1",
   "private": true,
   "scripts": {
-    "dev": "next dev frontend",
-    "build": "next build frontend",
-    "start": "next start frontend"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
   },
   "dependencies": {
     "ai": "^6.0.0",
